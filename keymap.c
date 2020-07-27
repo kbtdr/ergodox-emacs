@@ -460,41 +460,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	 // Standard Emacs functions
 
-	 // Ctrl and Alt via single/double tap and hold
-
-	 static tap mod_tap_state = {
-	   .is_press_action = true,
-	   .state = 0
-	 };
-
-	 void dance_mod_finished (qk_tap_dance_state_t *state, void *user_data) {
-	   mod_tap_state.state = cur_dance(state);
-	   switch (mod_tap_state.state) {
-	     case SINGLE_TAP:  break;
-	     case SINGLE_HOLD: register_code(KC_LCTRL);  break;
-	     case DOUBLE_TAP:  break;
-	     case DOUBLE_HOLD: register_code(KC_LALT);   break;
-	     case DOUBLE_SINGLE_TAP: break;
-	     case TRIPLE_TAP:        break;
-	     case TRIPLE_HOLD:       break;
-	     case TRIPLE_SINGLE_TAP: break;
-	   }
-	 }
-
-	 void dance_mod_reset (qk_tap_dance_state_t *state, void *user_data) {
-	   switch (mod_tap_state.state) {
-	     case SINGLE_TAP:  break;
-	     case SINGLE_HOLD: unregister_code(KC_LCTRL);  break;
-	     case DOUBLE_TAP:  break;
-	     case DOUBLE_HOLD: unregister_code(KC_LALT);   break;
-	     case DOUBLE_SINGLE_TAP: break;
-	     case TRIPLE_TAP:        break;
-	     case TRIPLE_HOLD:       break;
-	     case TRIPLE_SINGLE_TAP: break;
-	   }
-	   mod_tap_state.state = 0;
-	 }
-
 	 // Cut, copy, paste
 	 static tap ccp_tap_state = {
 	   .is_press_action = true,
