@@ -18,5 +18,10 @@ overlaid on the thumb keys, utilising double and triple taps.
 Some toggles for non letter keys such as pipe, colon and question mark
 are defined to save pressing the shift key.
 
+Ctrl/Alt keys are accessed via single/double tap and hold on two keys,
+one on each keypad just above the thumb keys.
+
 A custom key to toggle line numbers, focussed editing mode, and custom colour themes is also defined.
 Thanks to [Protesiaos Stavrou](https://protesilaos.com) for these and his beautiful Modus Operandi and Vivendi Themes.
+
+A diagram of the layout is shown in the keymap.c file.
