@@ -66,9 +66,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 void dance_qum_reset (qk_tap_dance_state_t *state, void *user_data);
 
 
-	 void dance_mod_finished (qk_tap_dance_state_t *state, void *user_data);
+	 void dance_caa_finished (qk_tap_dance_state_t *state, void *user_data);
 
-	 void dance_mod_reset (qk_tap_dance_state_t *state, void *user_data);
+	 void dance_caa_reset (qk_tap_dance_state_t *state, void *user_data);
 
 	 void dance_sch_finished (qk_tap_dance_state_t *state, void *user_data);
 
@@ -212,6 +212,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	   CT_SCH,         // single tap - forward search double - backward search
 	   CT_CCP,         // single tap - cut            double - copy                        triple - paste
+	   CT_CAA,         // single hold - ctrl          double hold - alt
 	   CT_FIL,         // single tap - find file,     double - save file,                  triple - write file, quadruple - sudo open read only file
 	   CT_REG,         // single tap - bookmark jump  double - register mark      double tap and hold - register menu
 	   CT_NAR,         // single tap - comma          double - org narrow buffer
@@ -253,10 +254,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	      * | Tab    |   Q  |   W  |   E  |   R  |   T  | cut  |           | book |   Y  |   U  |   I  |   O  |   P  |   -    |
 	      * |--------+------+------+------+------+------| copy |           | reg  |------+------+------+------+------+--------|
 	      * |        |      |      |      |      |      | paste|           |      |      |      |      |      |      |        |
-	      * | C-M    |   A  |   S  |   D  |   F  |   G  |------|           |------|  H   |   J  |   K  |   L  |   ;  |   '    |
-	      * |--------+------+------+------+------+------| LCtrl|           | LAlt |------+------+------+------+------+--------|
+	      * | C-M    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |   '    |
+	      * |--------+------+------+------+------+------| LAlt |           | LAlt |------+------+------+------+------+--------|
 	      * |        |      |      |      |      |      |      |           |      |      |      |  ORG |  ORG |      |        |
-	      * |   \|   |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  |   #    |
+	      * |   \|   |   Z  |   X  |   C  |   V  |   B  | LCtrl|           |LCtrl |   N  |   M  |   ,  |   .  |   /  |   #    |
 	      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
 	      *   |  `¬  | Home | End  |Start | End  |                                       | ([{  | )]}  | TOGS | TG_1 | TG_0 |
 	      *   `----------------------------------'                                       `----------------------------------'
@@ -277,7 +278,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		MK_C_M      ,KC_1      ,KC_2       ,KC_3       ,KC_4       ,KC_5       ,KC_ESC
 	       ,KC_TAB      ,KC_Q      ,KC_W       ,KC_E       ,KC_R       ,KC_T       ,TD(CT_CCP)
 	       ,KC_CAPS     ,KC_A      ,KC_S       ,KC_D       ,KC_F       ,KC_G
-	       ,TD(CT_PIP)  ,KC_Z      ,KC_X       ,KC_C       ,KC_V       ,KC_B       ,F(F_CTRL)
+	       ,TD(CT_PIP)  ,KC_Z      ,KC_X       ,KC_C       ,KC_V       ,KC_B       ,TD(CT_CAA)
 	       ,KC_GRV      ,TD(CT_STA),TD(CT_END) ,TD(CT_BKD) ,TD(CT_FWD)
 
 									   ,TD(CT_FIL) ,TD(CT_REP)
@@ -288,7 +289,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 									,KC_INS     ,KC_6       ,KC_7       ,KC_8       ,KC_9       ,KC_0       ,KC_EQL
 									,TD(CT_REG) ,KC_Y       ,KC_U       ,KC_I       ,KC_O       ,KC_P       ,KC_MINS
 										    ,KC_H       ,KC_J       ,KC_K       ,KC_L       ,TD(CT_CLN) ,KC_QUOT
-									,F(F_LALT)  ,KC_N       ,KC_M       ,TD(CT_NAR) ,TD(CT_WID) ,TD(CT_QUM) ,KC_NUHS
+									,TD(CT_CAA) ,KC_N       ,KC_M       ,TD(CT_NAR) ,TD(CT_WID) ,TD(CT_QUM) ,KC_NUHS
 												,TD(CT_LBR) ,TD(CT_RBR) ,TD(CT_TOG) ,TO(1)     ,TO(0)
 
 									,TD(CT_SCH) ,KC_BSPC
@@ -308,8 +309,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	      * |--------+------+------+------+------+------| copy |           | reg  |------+------+------+------+------+--------|
 	      * |        |      |      |      |      |      |paste |           |      |      |      |      |      |      |        |
 	      * | C-M    |   A  |   S  |   D  |   F  | Vol+ |------|           |------| ESS  |   4  |   5  |   6  |   -  |  Clear |
-	      * |--------+------+------+------+------+------| LCtrl|           | LAlt |------+------+------+------+------+--------|
-	      * |     \| |   Z  |   X  |   C  |   V  | Vol- |      |           |      |  N   |   1  |   2  |   3  |   +  |   =    |
+	      * |--------+------+------+------+------+------| LAlt |           | LAlt |------+------+------+------+------+--------|
+	      * |     \| |   Z  |   X  |   C  |   V  | Vol- | LCtrl|           | LCtrl|  N   |   1  |   2  |   3  |   +  |   =    |
 	      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
 	      *   |  `¬  | Prev | Next | Stop | Play |                                       |   0  |   .  | Enter| TG_1 | TG_0 |
 	      *   `----------------------------------'                                       `----------------------------------'
@@ -492,6 +493,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	     case TRIPLE_SINGLE_TAP: break;
 	   }
 	   ccp_tap_state.state = 0;
+	 }
+
+
+	 // ctrl and alt
+	 static tap caa_tap_state = {
+	   .is_press_action = true,
+	   .state = 0
+	 };
+
+	 void dance_caa_finished (qk_tap_dance_state_t *state, void *user_data) {
+	   caa_tap_state.state = cur_dance(state);
+	   switch (caa_tap_state.state) {
+	     case SINGLE_TAP: break;
+	     case SINGLE_HOLD: register_code(KC_LCTRL); break;
+	     case DOUBLE_TAP: break;
+	     case DOUBLE_HOLD:  register_code(KC_LALT); break;
+	     case DOUBLE_SINGLE_TAP: break;
+	     case TRIPLE_TAP:        break;
+	     case TRIPLE_HOLD:       break;
+	     case TRIPLE_SINGLE_TAP: break;
+	   }
+	 }
+
+	 void dance_caa_reset (qk_tap_dance_state_t *state, void *user_data) {
+	   switch (caa_tap_state.state) {
+	     case SINGLE_TAP: break;
+	     case SINGLE_HOLD: unregister_code(KC_LCTRL); break;
+	     case DOUBLE_TAP: break;
+	     case DOUBLE_HOLD:  unregister_code(KC_LALT); break;
+	     case DOUBLE_SINGLE_TAP: break;
+	     case TRIPLE_TAP:        break;
+	     case TRIPLE_HOLD:       break;
+	     case TRIPLE_SINGLE_TAP: break;
+	   }
+	   caa_tap_state.state = 0;
 	 }
 
 	 // File - read, save, write
@@ -1009,12 +1045,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	 void dance_tog_reset (qk_tap_dance_state_t *state, void *user_data) {
 	   switch (tog_tap_state.state) {
-	     case SINGLE_TAP:unregister_code(KC_F7);break; // toggle line numbers
+	     case SINGLE_TAP: unregister_code(KC_F7);break; // toggle line numbers
 	     case SINGLE_HOLD: break;
-	     case DOUBLE_TAP:  unregister_code(KC_F3);break; // toggle olivetti mode
+	     case DOUBLE_TAP: unregister_code(KC_F3);break; // toggle olivetti mode
 	     case DOUBLE_HOLD: break;
 	     case DOUBLE_SINGLE_TAP: break;
-	     case TRIPLE_TAP: unregister_code(KC_F5); break; // toggle custom theme
+	     case TRIPLE_TAP: unregister_code(KC_F5);break; // toggle custom theme
 	   }
 	   tog_tap_state.state = 0;
 	 }
@@ -1028,6 +1064,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	   ,[CT_SCH]  = ACTION_TAP_DANCE_DOUBLE(LCTL(KC_S), LCTL(KC_R))                                      // search forward reverse
 	   ,[CT_CCP]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_ccp_finished, dance_ccp_reset)             // cut copy yank
+	   ,[CT_CAA]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_caa_finished, dance_caa_reset)             // ctrl and alt tap and hold
 	   ,[CT_FIL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_file_finished, dance_file_reset)           // files open save write
 	   ,[CT_REG]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_reg_finished, dance_reg_reset)             // bookmarks and registers
 
