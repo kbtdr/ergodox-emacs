@@ -210,10 +210,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	   CT_PIP,         // single tap - back slash     double - pipe
 	   CT_QUM,         // single tap - forward slash  double - question mark
 
-	   CT_SCH,         // single tap - forward search double - backward search
+	   CT_SCH,         // single tap - forward search double - advanced search
 	   CT_CCP,         // single tap - cut            double - copy                        triple - paste
 	   CT_CAA,         // single hold - ctrl          double hold - alt
-	   CT_FIL,         // single tap - find file,     double - save file,                  triple - write file, quadruple - sudo open read only file
+	   CT_FIL,         // single tap - find file,     double - save file,                  triple - write file
 	   CT_REG,         // single tap - bookmark jump  double - register mark      double tap and hold - register menu
 	   CT_NAR,         // single tap - comma          double - org narrow buffer
 	   CT_WID,         // single tap - dot            double - org widen buffer
@@ -232,7 +232,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	   CT_ESS,         // single tap - ESS
 
-	   CT_TOG          // single tap - line nos       double - custom theme                 triple - olivetti mode
+	   CT_TOG          // single tap - monocle mode single hold-line nos       double - custom theme                 triple - olivetti mode
 
 	 };
 
@@ -1034,8 +1034,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 void dance_tog_finished (qk_tap_dance_state_t *state, void *user_data) {
 	   tog_tap_state.state = cur_dance(state);
 	   switch (tog_tap_state.state) {
-	     case SINGLE_TAP:register_code(KC_F7);break; // toggle line numbers
-	     case SINGLE_HOLD: break;
+	     case SINGLE_TAP:  register_code(KC_F8);break; // toggle monocle mode;
+	     case SINGLE_HOLD: register_code(KC_F7);break; // toggle line numbers;
 	     case DOUBLE_TAP:  register_code(KC_F3);break; // toggle olivetti mode
 	     case DOUBLE_HOLD: break;
 	     case DOUBLE_SINGLE_TAP: break;
@@ -1045,12 +1045,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	 void dance_tog_reset (qk_tap_dance_state_t *state, void *user_data) {
 	   switch (tog_tap_state.state) {
-	     case SINGLE_TAP: unregister_code(KC_F7);break; // toggle line numbers
-	     case SINGLE_HOLD: break;
-	     case DOUBLE_TAP: unregister_code(KC_F3);break; // toggle olivetti mode
+	     case SINGLE_TAP:  unregister_code(KC_F8);break; // toggle monocle mode;
+	     case SINGLE_HOLD: unregister_code(KC_F7);break; // toggle line numbers;
+	     case DOUBLE_TAP:  unregister_code(KC_F3);break; // toggle olivetti mode
 	     case DOUBLE_HOLD: break;
 	     case DOUBLE_SINGLE_TAP: break;
-	     case TRIPLE_TAP: unregister_code(KC_F5);break; // toggle custom theme
+	     case TRIPLE_TAP: unregister_code(KC_F5); break; // toggle custom theme
 	   }
 	   tog_tap_state.state = 0;
 	 }
@@ -1062,7 +1062,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	   ,[CT_PIP]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_pip_finished, dance_pip_reset)             // double tap pipe
 	   ,[CT_QUM]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_qum_finished, dance_qum_reset)             // double tap question mark
 
-	   ,[CT_SCH]  = ACTION_TAP_DANCE_DOUBLE(LCTL(KC_S), LCTL(KC_R))                                      // search forward reverse
+	   ,[CT_SCH]  = ACTION_TAP_DANCE_DOUBLE(LCTL(KC_S), LALT(KC_S))                                      // search forward advanced search
 	   ,[CT_CCP]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_ccp_finished, dance_ccp_reset)             // cut copy yank
 	   ,[CT_CAA]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_caa_finished, dance_caa_reset)             // ctrl and alt tap and hold
 	   ,[CT_FIL]  = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_file_finished, dance_file_reset)           // files open save write
