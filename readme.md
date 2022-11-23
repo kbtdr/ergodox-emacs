@@ -19,7 +19,7 @@ Some toggles for non letter keys such as pipe, colon and question mark
 are defined to save pressing the shift key.
 
 A custom key to toggle line numbers, focussed editing mode, and custom colour themes is also defined.
-Thanks to [Protesiaos Stavrou](https://protesilaos.com) for these and his beautiful Modus Operandi and Vivendi Themes.
+Thanks to [Protesilaos Stavrou](https://protesilaos.com) for these and his beautiful Modus Operandi and Vivendi Themes.
 
 The ctrl and alt keys are currently defined as one shot keys on the left and right keyboards.  The keymap also contains
 an action *caa* which could be assigned to these keys allowing for single and double hold functions to generate ctrl and alt.
